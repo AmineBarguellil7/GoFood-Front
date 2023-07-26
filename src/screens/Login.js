@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import NavBar from "../components/NavBar";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 
 export default function Login() {
 
+
+
+  const navigate=useNavigate();
 
   const [credentials, setCredentials] = useState({
     email: "",
@@ -12,7 +15,7 @@ export default function Login() {
 
   const HandleSubmit = async (e) => {
     e.preventDefault();
-    const response =await fetch("http://localhost:4000/api/addUser", {
+    const response =await fetch("http://localhost:4000/api/loginuser", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -27,6 +30,11 @@ export default function Login() {
 
     if (!json.success) {
       alert("Enter valid credentials")
+    }
+
+    if (json.success) {
+      localStorage.setItem("authToken",json.authToken);
+      navigate("/");
     }
   };
 
@@ -51,7 +59,7 @@ export default function Login() {
               onChange={onChange}
             />
           </div>
-          <div className="col-md-12">
+          <div className="col-md-6">
             <label htmlFor="password" className="form-label">
               Password
             </label>
@@ -65,7 +73,7 @@ export default function Login() {
           </div>
           <div className="col-12">
             <button type="submit" className="btn btn-success">
-              Sign up
+              Sign in
             </button>
             <Link to="/createuser" className="m-3 btn btn-danger">
             I'm a new user
